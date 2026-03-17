@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform
+  namespace: argocd # Namespace where Argo CD is installed
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/L-V-Ramana/eks-argocd.git
+    targetRevision: main
+    path: application # Directory within the repo
+  destination:
+    server: https://kubernetes.default.svc # Target cluster
+    namespace: argocd  # Target namespace for the app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
