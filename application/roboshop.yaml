@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: roboshop
+  namespace: argocd  # Argo CD's control namespace
+spec:
+  project: roboshop   # Argo CD project name
+  source:
+    repoURL: https://github.com/L-V-Ramana/eks-argocd.git
+    targetRevision: main   # Git branch, tag, or commit
+    path: roboshop        # Path inside the repo containing manifests
+  destination:
+    server: https://kubernetes.default.svc  # Target cluster (in-cluster)
+    namespace: argocd                    # Namespace to deploy into
+  syncPolicy:
+    automated:
+      prune: true       # Remove resources not in Git
+      selfHeal: true    # Revert out-of-band changes
+    syncOptions:
+      - CreateNamespace=true  # Auto-create namespace if missing
